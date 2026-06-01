@@ -83,4 +83,53 @@ public_users.get('/review/:isbn', (req, res) => {
     return res.status(200).json(books[isbn].reviews);
 });
 
+function getAllBooks(callback) {
+    setTimeout(() => {
+        callback(null, books);
+    }, 1000);
+}
+
+public_users.get('/async/books', (req, res) => {
+    getAllBooks((err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+    });
+});
+
+function searchByISBN(isbn) {
+    return new Promise((resolve, reject) => {
+        if (books[isbn]) {
+            resolve(books[isbn]);
+        } else {
+            reject({ message: "Book not found" });
+        }
+    });
+}
+
+public_users.get('/async/isbn/:isbn', (req, res) => {
+    searchByISBN(req.params.isbn)
+        .then(data => res.json(data))
+        .catch(err => res.status(404).json(err));
+});
+
+function searchByAuthor(author) {
+    return Object.values(books).filter(
+        book => book.author.toLowerCase() === author.toLowerCase()
+    );
+}
+
+public_users.get('/async/author/:author', (req, res) => {
+    return res.json(searchByAuthor(req.params.author));
+});
+
+function searchByTitle(title) {
+    return Object.values(books).filter(
+        book => book.title.toLowerCase() === title.toLowerCase()
+    );
+}
+
+public_users.get('/async/title/:title', (req, res) => {
+    return res.json(searchByTitle(req.params.title));
+});
+
 module.exports.general = public_users;
