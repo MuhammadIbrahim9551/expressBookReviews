@@ -1,14 +1,17 @@
-console.log("🔥 REAL GENERAL.JS FILE EXECUTING");
+console.log("🔥 GENERAL.JS LOADED");
+
 const express = require('express');
 let books = require("./booksdb.js");
-let users = require("./auth_users.js").users;
+let usersModule = require("./auth_users.js");
 
+let users = usersModule.users;
 
 const public_users = express.Router();
+
+// REGISTER
 public_users.post("/register", (req, res) => {
 
-    const username = req.body.username;
-    const password = req.body.password;
+    const { username, password } = req.body;
 
     if (!username || !password) {
         return res.status(400).json({ message: "Invalid input" });
@@ -27,14 +30,13 @@ public_users.post("/register", (req, res) => {
     });
 });
 
-// Get all books
-public_users.get('/', function (req, res) {
-
+// GET ALL BOOKS
+public_users.get('/', (req, res) => {
     return res.status(200).json(books);
 });
 
-// Get book details based on ISBN
-public_users.get('/isbn/:isbn', function (req, res) {
+// GET BY ISBN
+public_users.get('/isbn/:isbn', (req, res) => {
 
     const isbn = req.params.isbn;
 
@@ -44,32 +46,33 @@ public_users.get('/isbn/:isbn', function (req, res) {
 
     return res.status(200).json(books[isbn]);
 });
-// Get books by author
-public_users.get('/author/:author', function (req, res) {
+
+// GET BY AUTHOR
+public_users.get('/author/:author', (req, res) => {
 
     const author = req.params.author.toLowerCase();
 
-    let result = Object.values(books).filter(
+    const result = Object.values(books).filter(
         book => book.author.toLowerCase() === author
     );
 
     return res.status(200).json(result);
 });
 
-// Get books by title
-public_users.get('/title/:title', function (req, res) {
+// GET BY TITLE
+public_users.get('/title/:title', (req, res) => {
 
     const title = req.params.title.toLowerCase();
 
-    let result = Object.values(books).filter(
+    const result = Object.values(books).filter(
         book => book.title.toLowerCase() === title
     );
 
     return res.status(200).json(result);
 });
 
-// Get reviews
-public_users.get('/review/:isbn', function (req, res) {
+// GET REVIEWS
+public_users.get('/review/:isbn', (req, res) => {
 
     const isbn = req.params.isbn;
 
