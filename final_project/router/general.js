@@ -4,7 +4,7 @@ const express = require('express');
 let books = require("./booksdb.js");
 let usersModule = require("./auth_users.js");
 
-let users = usersModule.users;
+let users = require("./users");
 
 const public_users = express.Router();
 
