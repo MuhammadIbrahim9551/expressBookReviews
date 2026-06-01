@@ -18,29 +18,30 @@ app.use(
     })
 );
 
-// AUTH MIDDLEWARE (FIXED OR REMOVED FOR NOW)
-function auth(req, res, next) {
-    if (req.session.authorization) {
-        let token = req.session.authorization.accessToken;
+// AUTH MIDDLEWARE (FIXED)
+app.use("/customer/auth/*", function auth(req, res, next) {
 
-        jwt.verify(token, "access", (err, user) => {
+    if (req.session.authorization) {
+
+        let token = req.session.authorization.token || req.session.authorization.accessToken;
+
+        jwt.verify(token, "fingerprint_customer", (err, user) => {
             if (!err) {
                 req.user = user;
                 next();
             } else {
-                return res.status(403).json({ message: "Not authorized" });
+                return res.status(403).json({ message: "User not authenticated" });
             }
         });
-    } else {
-        return res.status(403).json({ message: "Not logged in" });
-    }
-}
 
-app.use("/customer/auth", auth);
+    } else {
+        return res.status(403).json({ message: "User not logged in" });
+    }
+});
 
 const PORT = 5000;
 
 app.use("/customer", customer_routes);
 app.use("/", genl_routes);
 
-app.listen(PORT, () => console.log("Server is running"));
+app.listen(PORT, () => console.log("Server is running on port", PORT));
