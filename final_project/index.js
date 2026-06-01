@@ -2,8 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 
-console.log("RUNNING FROM:", __dirname);
-
+console.log("🔥 LOADED NEW GENERAL.JS");
 const customer_routes =
 require('./router/auth_users.js').authenticated;
 
