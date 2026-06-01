@@ -1,4 +1,4 @@
-console.log("🔥 GENERAL.JS LOADED");
+console.log("🔥 GENERAL.JS LOADED FROM:", __filename);
 
 const express = require('express');
 let books = require("./booksdb.js");
