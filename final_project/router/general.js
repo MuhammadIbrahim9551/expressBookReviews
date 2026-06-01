@@ -1,8 +1,8 @@
+console.log("🔥 REAL GENERAL.JS FILE EXECUTING");
 const express = require('express');
 let books = require("./booksdb.js");
 let users = require("./auth_users.js").users;
 
-console.log("🔥 GENERAL.JS LOADED FROM:", __dirname);
 
 const public_users = express.Router();
 public_users.post("/register", (req, res) => {
