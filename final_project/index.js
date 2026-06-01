@@ -1,3 +1,4 @@
+console.log("🔥 INDEX.JS ACTIVE:", __filename);
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
