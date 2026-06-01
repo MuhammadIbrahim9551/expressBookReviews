@@ -1,22 +1,16 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-let books = require("./booksdb.js");
 
 const regd_users = express.Router();
 
 let users = [];
-module.exports.users = users;
 
-// validation
 const isValid = (username) => {
-    return users.some(user => user.username === username);
+    return users.some(u => u.username === username);
 };
 
 const authenticatedUser = (username, password) => {
-    return users.some(user =>
-        user.username === username &&
-        user.password === password
-    );
+    return users.some(u => u.username === username && u.password === password);
 };
 
 // LOGIN
@@ -41,35 +35,12 @@ regd_users.post("/login", (req, res) => {
             username
         };
 
-        return res.status(200).json({ token: accessToken });
+        return res.json({ token: accessToken });
     }
 
     return res.status(401).json({ message: "Invalid credentials" });
 });
 
-// REVIEW
-regd_users.put("/auth/review/:isbn", (req, res) => {
-
-    const isbn = req.params.isbn;
-    const review = req.body.review;
-    const auth = req.session.authorization;
-
-    if (!auth) {
-        return res.status(403).json({ message: "Not logged in" });
-    }
-
-    if (!books[isbn]) {
-        return res.status(404).json({ message: "Book not found" });
-    }
-
-    books[isbn].reviews[auth.username] = review || "";
-
-    return res.status(200).json({
-        message: "Review added/updated successfully",
-        reviews: books[isbn].reviews
-    });
-});
-
 module.exports.authenticated = regd_users;
-module.exports.isValid = isValid;
 module.exports.users = users;
+module.exports.isValid = isValid;
