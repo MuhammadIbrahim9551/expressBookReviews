@@ -5,6 +5,11 @@ const regd_users = express.Router();
 
 let users = [];
 
+module.exports = {
+    users,
+    authenticated: regd_users,
+    isValid
+};
 const isValid = (username) => {
     return users.some(u => u.username === username);
 };
