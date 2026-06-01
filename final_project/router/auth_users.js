@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const regd_users = express.Router();
 
-let users = [];
+let users = require("./users");
 
 const isValid = (username) => {
     return users.some(user => user.username === username);
