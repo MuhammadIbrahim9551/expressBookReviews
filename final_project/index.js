@@ -1,4 +1,3 @@
-console.log("🔥 INDEX.JS IS RUNNING FROM:", __dirname);
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
@@ -19,39 +18,29 @@ app.use(
     })
 );
 
-// AUTH MIDDLEWARE
-function authMiddleware(req, res, next) {
-
+// AUTH MIDDLEWARE (FIXED OR REMOVED FOR NOW)
+function auth(req, res, next) {
     if (req.session.authorization) {
-
         let token = req.session.authorization.accessToken;
 
         jwt.verify(token, "access", (err, user) => {
-
             if (!err) {
                 req.user = user;
                 next();
             } else {
-                return res.status(403).json({
-                    message: "User not authenticated"
-                });
+                return res.status(403).json({ message: "Not authorized" });
             }
         });
-
     } else {
-        return res.status(403).json({
-            message: "User not logged in"
-        });
+        return res.status(403).json({ message: "Not logged in" });
     }
 }
 
-app.use("/customer/auth/*", authMiddleware);
+app.use("/customer/auth", auth);
 
 const PORT = 5000;
 
 app.use("/customer", customer_routes);
 app.use("/", genl_routes);
 
-app.listen(PORT, () =>
-    console.log("Server is running on port " + PORT)
-);
+app.listen(PORT, () => console.log("Server is running"));
