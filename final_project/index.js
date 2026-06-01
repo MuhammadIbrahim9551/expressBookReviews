@@ -2,12 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 
-console.log("🔥 LOADED NEW GENERAL.JS");
-const customer_routes =
-require('./router/auth_users.js').authenticated;
-
-const genl_routes =
-require('./router/general.js');
+const customer_routes = require('./router/auth_users.js').authenticated;
+const genl_routes = require('./router/general.js').general;
 
 const app = express();
 
@@ -22,34 +18,33 @@ app.use(
     })
 );
 
-app.use("/customer/auth", authMiddleware); {
+// AUTH MIDDLEWARE
+function authMiddleware(req, res, next) {
 
     if (req.session.authorization) {
 
-        let token =
-        req.session.authorization.accessToken;
+        let token = req.session.authorization.accessToken;
 
-        jwt.verify(token, "access",
-            (err, user) => {
+        jwt.verify(token, "access", (err, user) => {
 
-                if (!err) {
-                    req.user = user;
-                    next();
-                }
-                else {
-                    return res.status(403).json({
-                        message:
-                        "User not authenticated"
-                    });
-                }
-            });
-    }
-    else {
+            if (!err) {
+                req.user = user;
+                next();
+            } else {
+                return res.status(403).json({
+                    message: "User not authenticated"
+                });
+            }
+        });
+
+    } else {
         return res.status(403).json({
             message: "User not logged in"
         });
     }
-});
+}
+
+app.use("/customer/auth/*", authMiddleware);
 
 const PORT = 5000;
 
@@ -57,5 +52,5 @@ app.use("/customer", customer_routes);
 app.use("/", genl_routes);
 
 app.listen(PORT, () =>
-    console.log("Server is running")
+    console.log("Server is running on port " + PORT)
 );
