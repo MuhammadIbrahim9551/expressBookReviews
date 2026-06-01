@@ -2,6 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 
+console.log("RUNNING FROM:", __dirname);
+
 const customer_routes =
 require('./router/auth_users.js').authenticated;
 
@@ -21,7 +23,7 @@ app.use(
     })
 );
 
-app.use("/customer/auth/*", function auth(req, res, next) {
+app.use("/customer/auth", authMiddleware); {
 
     if (req.session.authorization) {
 
