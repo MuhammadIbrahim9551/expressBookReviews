@@ -14,8 +14,8 @@ app.use(
     "/customer",
     session({
         secret: "fingerprint_customer",
-        resave: true,
-        saveUninitialized: true
+        resave: false,
+        saveUninitialized: false
     })
 );
 
